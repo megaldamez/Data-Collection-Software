@@ -1,0 +1,174 @@
+; Installation INF
+;
+; (c) Copyright 2010 Braintechnology
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=%ClassName%
+ClassGUID={78218efa-e3b1-4adf-8b30-cf0f0321ddfe}
+provider=%BRUSB_Provider%
+CatalogFile=BRUSB.cat
+DriverVer=04/17/2010,3.4.1.20
+
+[SourceDisksNames]
+1=%BRUSB_Install%,,,
+
+[SourceDisksFiles]
+BRUSB.sys = 1
+BRUSB64.sys = 1
+brain.dll = 1
+
+[DestinationDirs]
+BRUSB.Files.Ext = 10,System32\Drivers
+BRUSB64.Files.Ext = 10,System32\Drivers
+BRUSB.Files.dll = 10,System32
+
+[ClassInstall]
+AddReg=_AddReg_ClassInstall
+CopyFiles=BRUSB.Files.dll
+
+[ClassInstall32] 
+AddReg=_AddReg_ClassInstall
+CopyFiles=BRUSB.Files.dll
+
+[_AddReg_ClassInstall]
+HKR,,,,%ClassName%
+HKR,,Icon,,"4711"
+HKR,,EnumPropPages32,,"brain.dll,PropPageProvider" 
+
+[ControlFlags]
+ExcludeFromSelect = *
+
+[Manufacturer]
+%BRUSB_Provider%=Device,NT,NTx86,NTamd64
+
+;for all systems
+[Device]
+%VID_16D0&PID_050E.DeviceDesc%=BrUsb, USB\VID_16D0&PID_050E
+
+
+;for windows 2000 non intel based systems
+[Device.NT]
+%VID_16D0&PID_050E.DeviceDesc%=BrUsb, USB\VID_16D0&PID_050E
+
+
+;for x86 based systems
+[Device.NTx86]
+%VID_16D0&PID_050E.DeviceDesc%=BrUsb, USB\VID_16D0&PID_050E
+
+
+;for x64 based systems
+[Device.NTamd64]
+%VID_16D0&PID_050E.DeviceDesc64%=BrUsb, USB\VID_16D0&PID_050E
+
+;for Itanium based systems
+;[Device.NTia64]
+;%VID_16D0&PID_050E.DeviceDesc64%=BrUsb, USB\VID_16D0&PID_050E
+
+[BRUSB.NT]
+CopyFiles=BRUSB.Files.Ext
+AddReg=BrUsb.AddReg
+
+[BRUSB.NT.HW]
+AddReg=BRUSB.AddReg.Guid
+
+[BRUSB.NT.Services]
+Addservice = BrUsb, 0x00000002, BrUsb.AddService
+
+[BRUSB.NTx86]
+CopyFiles=BRUSB.Files.Ext
+AddReg=BrUsb.AddReg
+
+
+[BRUSB.NTx86.HW]
+AddReg=BRUSB.AddReg.Guid
+
+[BRUSB.NTx86.Services]
+Addservice = BrUsb, 0x00000002, BrUsb.AddService
+
+[BRUSB.NTamd64]
+CopyFiles=BRUSB64.Files.Ext
+AddReg=BrUsb64.AddReg
+
+
+[BRUSB.NTamd64.HW]
+AddReg=BRUSB64.AddReg.Guid
+
+[BRUSB.NTamd64.Services]
+Addservice = BrUsb64, 0x00000002, BrUsb64.AddService
+
+[BRUSB.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,BRUSB.sys
+HKR,,DriverBase,,BRUSB.sys
+HKR,"Parameters","MaximumTransferSize",0x10001,4096
+HKR,"Parameters","DebugLevel",0x10001,2
+HKR,,FriendlyName,,%BRUSB_Description%
+
+
+[BRUSB64.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,BRUSB64.sys
+HKR,,DriverBase,,BRUSB64.sys
+HKR,"Parameters","MaximumTransferSize",0x10001,4096
+HKR,"Parameters","DebugLevel",0x10001,2
+HKR,,FriendlyName,,%BRUSB_Description%
+
+
+[BRUSB.AddService]
+DisplayName    = %BRUSB_SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\BRUSB.sys
+LoadOrderGroup = Base
+
+[BRUSB64.AddService]
+DisplayName    = %BRUSB_SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\BRUSB64.sys
+LoadOrderGroup = Base
+
+[BRUSB.Files.Ext]
+BRUSB.sys
+
+[BRUSB64.Files.Ext]
+BRUSB64.sys
+
+[BRUSB.Files.dll]
+brain.dll
+
+[BRUSB.AddReg.Guid]
+HKR,,DriverGUID,,%BRUSB.GUID%
+
+[BRUSB64.AddReg.Guid]
+HKR,,DriverGUID,,%BRUSB.GUID%
+
+[Strings]	; No language ID implies English
+BRUSB_Provider    = "Lecoeur Electronique"
+BRUSB_Company     = "Braintechnology"
+BRUSB_Description = "Braintechnology USB Driver"
+BRUSB_SvcDesc	  = "Braintechnology device"
+BRUSB_DisplayName = "Braintechnology USB Generic"
+BRUSB_Install     = "Braintechnology USB Driver Installation Disc"
+ClassName	  = "Braintechnology devices"
+VID_16D0&PID_050E.DeviceDesc="US-Key Lecoeur Electronique"
+VID_16D0&PID_050E.DeviceDesc64="US-Key Lecoeur Electronique"
+BRUSB.GUID="{dd3f8fc7-d531-4c65-95ff-1fc8dfee2c52}"
+BRUSB_Unused      = "."
+
+[Strings.0407]         ; 0407 is the language ID for German
+BRUSB_Provider    = "Braintechnology"
+BRUSB_Company     = "Braintechnology"
+BRUSB_Description = "Braintechnology USB Treiber"
+BRUSB_SvcDesc	  = "Braintechnology Geraet"
+BRUSB_DisplayName = "Braintechnology USB allgemein"
+BRUSB_Install     = "Braintechnology USB Treiber installations Disk"
+ClassName	  = "Braintechnology Geraete"
+VID_16D0&PID_050E.DeviceDesc="Usb2 Geraet (2000, 2003, 2008, XP, vista, 7)"
+VID_16D0&PID_050E.DeviceDesc64="Usb2Dll Geraet 64 bit (2000, 2003, 2008, XP, vista, 7)"
+BRUSB.GUID="{dd3f8fc7-d531-4c65-95ff-1fc8dfee2c52}"
+BRUSB_Unused      = "."
